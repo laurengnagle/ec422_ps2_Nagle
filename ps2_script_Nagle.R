@@ -77,3 +77,40 @@ unemp_top_decreases_no_covid <- unemp_no_covid |> slice_min(unemployment_rate_ch
 
 unemp_summary
 unemp_top_increases_no_covid
+
+# Part 5.1: all regions on one plot
+ggplot(unemp, aes(x = date, y = unemployment_rate, color = region)) +
+  geom_line() +
+  labs(title = "Monthly Unemployment Rate, 1976–Present",
+       x = "Date", y = "Unemployment rate (%)", color = "Region") +
+  theme_minimal()
+
+# Part 5.2: one panel per region
+ggplot(unemp, aes(x = date, y = unemployment_rate, color = region)) +
+  geom_line() +
+  facet_wrap(~ region) +
+  labs(title = "Monthly Unemployment Rate by Region, 1976–Present",
+       x = "Date", y = "Unemployment rate (%)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# Part 5.3: average rate by region
+ggplot(unemp_summary, aes(x = fct_reorder(region, mean_rate), y = mean_rate)) +
+  geom_col() +
+  labs(title = "Average Unemployment Rate by Region, 1976–Present",
+       x = "Region", y = "Mean unemployment rate (%)") +
+  theme_minimal()
+
+# Part 5.4: Oregon vs. U.S. gap
+or_us_gap <- unemp |>
+  filter(region %in% c("Oregon", "United States")) |>
+  select(date, region, unemployment_rate) |>
+  pivot_wider(names_from = region, values_from = unemployment_rate) |>
+  mutate(gap = Oregon - `United States`)
+
+ggplot(or_us_gap, aes(x = date, y = gap)) +
+  geom_line() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(title = "Oregon Unemployment Rate Minus U.S. Rate",
+       x = "Date", y = "Percentage points") +
+  theme_minimal()
