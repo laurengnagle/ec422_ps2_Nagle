@@ -1,0 +1,115 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+---
+title: "Problem Set 2"
+author: "Lauren Nagle"
+date: today
+format:
+  html:
+    toc: true
+    embed-resources: true
+---
+
+**GitHub repo:** <https://github.com/laurengnagle/ec422_ps2_Nagle>
+
+```{r}
+#| echo: false
+#| message: false
+#| warning: false
+source("ps2_script_Nagle.R")
+library(knitr)
+```
+
+## Data
+
+The data are seasonally adjusted monthly unemployment rates for the United States, Oregon, California, Texas, and New York, pulled from FRED (Federal Reserve Bank of St. Louis) using the tidyquant package. The sample runs from January 1976 to the most recent available month.
+
+```{r}
+#| message: false
+unemp_raw <- read_rds("data/unemp_raw.rds")
+head(unemp_raw)
+```
+
+## Wrangling
+
+**Table 1: Unemployment rate summary, full sample (1976–present)**
+
+```{r}
+kable(unemp_summary, digits = 2,
+      col.names = c("Region", "Mean (%)", "Min (%)", "Max (%)"))
+```
+
+**Table 2: Unemployment rate summary, January 2015–present**
+
+```{r}
+kable(unemp_recent_summary, digits = 2,
+      col.names = c("Region", "Mean (%)", "Min (%)", "Max (%)"))
+```
+
+**Table 3: Five largest month-over-month increases, excluding 2020** (ties included)
+
+```{r}
+kable(unemp_top_increases_no_covid, digits = 2)
+```
+
+**Table 4: Five largest month-over-month decreases, excluding 2020** (ties included)
+
+```{r}
+kable(unemp_top_decreases_no_covid, digits = 2)
+```
+
+## Visualization
+
+**Figure 1** shows all five unemployment rates on one plot.
+
+```{r}
+ggplot(unemp, aes(x = date, y = unemployment_rate, color = region)) +
+  geom_line() +
+  labs(title = "Monthly Unemployment Rate, 1976–Present",
+       x = "Date", y = "Unemployment rate (%)", color = "Region") +
+  theme_minimal()
+```
+
+**Figure 2** shows each region in its own panel.
+
+```{r}
+ggplot(unemp, aes(x = date, y = unemployment_rate, color = region)) +
+  geom_line() +
+  facet_wrap(~ region) +
+  labs(title = "Monthly Unemployment Rate by Region, 1976–Present",
+       x = "Date", y = "Unemployment rate (%)") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+**Figure 3** shows the average unemployment rate by region over the full sample, ordered lowest to highest.
+
+```{r}
+ggplot(unemp_summary, aes(x = fct_reorder(region, mean_rate), y = mean_rate)) +
+  geom_col() +
+  labs(title = "Average Unemployment Rate by Region, 1976–Present",
+       x = "Region", y = "Mean unemployment rate (%)") +
+  theme_minimal()
+```
+
+**Figure 4**
+
+Figure 4 plots the difference between Oregon's unemployment rate and the entire US unemployment rate to see whether Oregon's labor market is weaker. Historically, Oregon's rate has exceeded that of the nation's rate, with significant gaps during recession years. In the late 90s, 2010s, and in 2020, Oregon dipped below the US rate.
+
+```{r}
+#| warning: false
+ggplot(or_us_gap, aes(x = date, y = gap)) +
+  geom_line() +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  labs(title = "Oregon Unemployment Rate Minus U.S. Rate",
+       x = "Date", y = "Percentage points") +
+  theme_minimal()
+```
+
+## Reflection
+
+Once the data was loaded, everything else was pretty straightforward. What tripped me up the most was the setup, keeping track of which lines belong in the terminal or console, and connecting my local repository to GitHub. I initially opened the wrong repository before finding the correct ps2 one. Also, about half way through, the fire alarm went off at my apartment and I thought it was a false alarm so I didn't evacuate. Turns out it was actually not a false alarm.
