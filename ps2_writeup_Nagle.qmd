@@ -112,4 +112,4 @@ ggplot(or_us_gap, aes(x = date, y = gap)) +
 
 ## Reflection
 
-Once the data was loaded, everything else was pretty straightforward. What tripped me up the most was the setup, keeping track of which lines belong in the terminal or console, and connecting my local repository to GitHub. I initially opened the wrong repository before finding the correct ps2 one. Also, about half way through, the fire alarm went off at my apartment and I thought it was a false alarm so I didn't evacuate. Turns out it was actually not a false alarm.
+Once the data was loaded, everything else was pretty straightforward. What tripped me up the most was the setup, keeping track of which lines belong in the terminal or console, and connecting my local repository to GitHub. I initially opened the wrong repository before finding the correct ps2 one. I feel much more comfortable with the add, commit, and push workflow, and with using git log to confirm my work was saved.
